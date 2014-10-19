@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+Name=Audio Files
+Name[lt]=Audio failai
+Name[ru]=Аудио файлы
+Name[ua]=Аудiо файли
+X-KDE-ServiceTypes=ThumbCreator
+MimeType=audio/mpeg;audio/flac;audio/x-flac;audio/mp4;audio/x-vorbis+ogg;audio/ogg;
+X-KDE-Library=AudioThumbs
+CacheThumbnail=true
+IgnoreMaximumSize=true
