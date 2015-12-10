@@ -75,13 +75,14 @@ bool ATCreator::create ( const QString &path, int /*w*/, int /*h*/, QImage &img 
         TagLib::MPEG::File mp3File(path.toUtf8());
         TagLib::ID3v2::Tag *mp3Tag = mp3File.ID3v2Tag();
         TagLib::ID3v2::FrameList fList = mp3Tag->frameList("APIC");
-        TagLib::ID3v2::AttachedPictureFrame *pic;
-        pic = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(fList.front());
-        if (!pic->picture().isEmpty()) {
-            img.loadFromData((const uchar *) pic->picture().data(),pic->picture().size());
-            bRet = true;
+        if (!fList.isEmpty()) {
+            TagLib::ID3v2::AttachedPictureFrame *pic;
+            pic = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(fList.front());
+            if (!pic->picture().isEmpty()) {
+                img.loadFromData((const uchar *) pic->picture().data(),pic->picture().size());
+                bRet = true;
+            }
         }
-
     } else if (type.name() == "audio/flac" || type.name() == "audio/x-flac") {
         TagLib::FLAC::File ff(path.toUtf8());
         TagLib::List<TagLib::FLAC::Picture *> coverList;
