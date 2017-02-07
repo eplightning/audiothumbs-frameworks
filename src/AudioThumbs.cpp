@@ -123,53 +123,10 @@ bool ATCreator::create ( const QString &path, int /*w*/, int /*h*/, QImage &img 
         TagLib::Ogg::Vorbis::File file(path.toUtf8());
         TagLib::Ogg::XiphComment *tag = file.tag();
 
-        if (tag->contains("METADATA_BLOCK_PICTURE")) {
-            TagLib::StringList blocks = tag->fieldListMap()["METADATA_BLOCK_PICTURE"];
-
-            for (uint i = 0; i < blocks.size(); i++) {
-                QByteArray data = QByteArray::fromBase64(blocks[i].toCString());
-                QDataStream s(&data, QIODevice::ReadOnly);
-
-                int type;
-                uint mimelen;
-                int descrlen;
-                int datalen;
-
-                int w;
-                int h;
-                int c;
-                int ic;
-
-                char * mime;
-                char * descr;
-                char * pic;
-
-                s >> type;
-                s >> mimelen;
-
-                mime = new char[mimelen+1];
-                s.readRawData(mime, mimelen);
-
-                mime[mimelen] = 0;
-
-                s >> descrlen;
-
-                descr = new char[descrlen+1];
-                s.readRawData(descr, descrlen);
-
-                descr[descrlen] = 0;
-
-                s >> w >> h >> c >> ic >> datalen;
-
-                if (!datalen)
-                  return false;
-
-                pic = new char[datalen];
-                s.readRawData(pic, datalen);
-                img = QImage::fromData(QByteArray(pic, datalen));
-
-                bRet = true;
-            }
+        if(!tag->pictureList().isEmpty()){
+          TagLib::FLAC::Picture* pic = tag->pictureList().front();
+          img.loadFromData((const uchar*)pic->data().data(), pic->data().size());
+          bRet = true;
         }
     }
     
